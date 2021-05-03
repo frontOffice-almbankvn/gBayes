@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class gNetwork extends Network {
     public ArrayList<gNode> listNodes;
@@ -20,6 +21,18 @@ public class gNetwork extends Network {
         this.setName(n);
     }
 
+    public ArrayList<gNode> gNetAllNodes(){
+        return this.listNodes;
+    }
+
+    public gNode getGNode(String nodeId) {
+        for(gNode g: listNodes){
+            if (g.getIdName().equals(nodeId)){
+                return g;
+            }
+        }
+        return null;
+    }
 
     public void addArc(gNode parentHandle, gNode childHandle) {
         super.addArc(parentHandle.getId(), childHandle.getId());
