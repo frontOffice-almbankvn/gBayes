@@ -44,6 +44,9 @@ public class gNode {
         this.net.setNodeDefinition(id,nodeDefinition);
         this.nodeDefinition = nodeDefinition;
     }
+    public void setTmpNodeDefinition(double[] nodeDefinition){
+        this.nodeDefinition = nodeDefinition;
+    }
 
     public String getSavedDefinition(){
         String kq = "";
@@ -190,7 +193,7 @@ public class gNode {
         return handle;
     }
     public static double[] convertToNodeDef(String s){
-        if (s == "") return null;
+        if ( s.length() == 0) return null;
         var aS = s.split(" ");
         double[] kq = new double[aS.length];
         for (int i = 0; i < aS.length; i ++){
@@ -199,7 +202,7 @@ public class gNode {
         return kq;
     }
     public static String[] converToStrings(String s){
-        if (s == "") return null;
+        if (s.length() == 0) return null;
         return s.split(",");
     }
 }

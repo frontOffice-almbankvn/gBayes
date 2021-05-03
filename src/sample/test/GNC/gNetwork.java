@@ -91,23 +91,31 @@ public class gNetwork extends Network {
             var rs = pstmt.executeQuery();
             gNetwork net = new gNetwork(netName);
             while (rs.next()){
-                String sOutComes = rs.getString("outcomes");
-                var snodeDef = gNode.convertToNodeDef( rs.getString("nodeDef"));
-                String tmpParent = rs.getString("parentNode");
+                String sOutComes = rs.getString("outcomes").trim();
 
-                gNode n = new gNode(net,rs.getString("idname"),rs.getString("nodeName"),
+                System.out.println( "/" + rs.getString("nodeDef").trim() +"/");
+                var snodeDef = gNode.convertToNodeDef( rs.getString("nodeDef").trim());
+                String tmpParent = rs.getString("parentNode").trim();
+
+                gNode n = new gNode(net,rs.getString("idname").trim(),rs.getString("nodeName").trim(),
                         gNode.converToStrings(sOutComes),rs.getInt("nodeType"), rs.getInt("xPos"), rs.getInt("yPos"),tmpParent);
-                if (snodeDef != null)  n.setNodeDefinition(snodeDef);
+                if (snodeDef != null)  n.setTmpNodeDefinition(snodeDef)  ;
             }
 
             for (gNode g: net.listNodes){
-                if(g.tmpParent != ""){
+                if(g.tmpParent.length() != 0) {
                     var s = gNode.converToStrings(g.tmpParent);
-
-                    for (gNode g2: net.listNodes){
-                        
+                    for (String m : s){
+                        for (gNode g2: net.listNodes){
+                            if (g2.getIdName().equals(m) ) {
+                                net.addArc(g2,g);
+                                break;
+                            }
+                        }
                     }
                 }
+
+                g.setNodeDefinition(g.getNodeDefinition());
             }
 
             return net;
