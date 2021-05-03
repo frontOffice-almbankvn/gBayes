@@ -27,7 +27,7 @@
 		</decision>
 		<utility id="Gain">
 			<parents>Invest Success</parents>
-			<utilities>0 0 0 0</utilities>
+			<utilities>10000 -5000 500 500</utilities>
 		</utility>
 	</nodes>
 	<extensions>

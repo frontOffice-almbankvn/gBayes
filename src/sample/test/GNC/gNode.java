@@ -200,6 +200,6 @@ public class gNode {
     }
     public static String[] converToStrings(String s){
         if (s == "") return null;
-        return s.split(" ");
+        return s.split(",");
     }
 }

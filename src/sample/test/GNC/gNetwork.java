@@ -85,7 +85,6 @@ public class gNetwork extends Network {
     }
 
     public static gNetwork loadFromDb(String netName,Connection con){
-
         try {
             PreparedStatement pstmt = con.prepareStatement("{call dbo.getNode (?) }");
             pstmt.setString(1,netName);
@@ -102,12 +101,19 @@ public class gNetwork extends Network {
             }
 
             for (gNode g: net.listNodes){
+                if(g.tmpParent != ""){
+                    var s = gNode.converToStrings(g.tmpParent);
 
+                    for (gNode g2: net.listNodes){
+                        
+                    }
+                }
             }
 
             return net;
         } catch (Exception e){
             e.printStackTrace();
+            return null;
         }
     }
 
