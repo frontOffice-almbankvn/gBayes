@@ -85,10 +85,27 @@ public class gNetwork extends Network {
     }
 
     public static gNetwork loadFromDb(String netName,Connection con){
+
         try {
             PreparedStatement pstmt = con.prepareStatement("{call dbo.getNode (?) }");
             pstmt.setString(1,netName);
+            var rs = pstmt.executeQuery();
+            gNetwork net = new gNetwork(netName);
+            while (rs.next()){
+                String sOutComes = rs.getString("outcomes");
+                var snodeDef = gNode.convertToNodeDef( rs.getString("nodeDef"));
+                String tmpParent = rs.getString("parentNode");
 
+                gNode n = new gNode(net,rs.getString("idname"),rs.getString("nodeName"),
+                        gNode.converToStrings(sOutComes),rs.getInt("nodeType"), rs.getInt("xPos"), rs.getInt("yPos"),tmpParent);
+                if (snodeDef != null)  n.setNodeDefinition(snodeDef);
+            }
+
+            for (gNode g: net.listNodes){
+
+            }
+
+            return net;
         } catch (Exception e){
             e.printStackTrace();
         }

@@ -12,6 +12,7 @@ public class gNode {
     private int xPos;
     private int yPos;
     private gNetwork net;
+    public String tmpParent;
 
     public int getNodeType() {
         return nodeType;
@@ -129,6 +130,27 @@ public class gNode {
         this.parentNodes = new ArrayList<gNode>();
         this.nodeDefinition = new double[] {};
     }
+    public gNode(gNetwork net, String id, String name,
+                 String[] outcomes, int nodeType ,int xPos, int yPos, String tmpParent){
+        this.net = net;
+        this.idName = id;
+        this.name= name;
+        this.outcomes = outcomes;
+        this.xPos = xPos;
+        this.yPos = yPos;
+        this.nodeType = nodeType;
+        this.name = name;
+        if (nodeType == Network.NodeType.CPT) {
+            this.id = createCptNode(net,id,name,outcomes,xPos,yPos);
+        } else {
+            this.id = createNode(net,nodeType,id,name,outcomes,xPos,yPos);
+        }
+
+        this.net.listNodes.add(this);
+        this.parentNodes = new ArrayList<gNode>();
+        this.nodeDefinition = new double[] {};
+        this.tmpParent = tmpParent;
+    }
 
     public static int createCptNode(
             Network net, String id, String name,
@@ -166,5 +188,18 @@ public class gNode {
             }
         }
         return handle;
+    }
+    public static double[] convertToNodeDef(String s){
+        if (s == "") return null;
+        var aS = s.split(" ");
+        double[] kq = new double[aS.length];
+        for (int i = 0; i < aS.length; i ++){
+            kq[i] = Double.parseDouble(aS[i]);
+        }
+        return kq;
+    }
+    public static String[] converToStrings(String s){
+        if (s == "") return null;
+        return s.split(" ");
     }
 }
