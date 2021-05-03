@@ -14,6 +14,11 @@ public class gNetwork extends Network {
         super();
         this.listNodes = new ArrayList<gNode>();
     }
+    public gNetwork(String n) {
+        super();
+        this.listNodes = new ArrayList<gNode>();
+        this.setName(n);
+    }
 
 
     public void addArc(gNode parentHandle, gNode childHandle) {
@@ -81,6 +86,8 @@ public class gNetwork extends Network {
 
     public static gNetwork loadFromDb(String netName,Connection con){
         try {
+            PreparedStatement pstmt = con.prepareStatement("{call dbo.getNode (?) }");
+            pstmt.setString(1,netName);
 
         } catch (Exception e){
             e.printStackTrace();
