@@ -34,6 +34,15 @@ public class gNetwork extends Network {
         return null;
     }
 
+    public gNode getGNodeByName(String nodeName){
+        for(gNode g: listNodes){
+            if (g.getName().equals(nodeName)){
+                return g;
+            }
+        }
+        return null;
+    }
+
     public void addArc(gNode parentHandle, gNode childHandle) {
         super.addArc(parentHandle.getId(), childHandle.getId());
         childHandle.parentNodes.add(parentHandle);
