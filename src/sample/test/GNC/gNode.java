@@ -28,9 +28,11 @@ public class gNode {
     public String getSavedParentNodes(){
         String kq = "";
         for(gNode g : parentNodes){
-            kq += g.idName + " ";
+            kq += g.idName + ",";
         }
-        return kq.trim();
+
+        if (kq == "") return kq;
+        return kq.trim().substring(0,kq.trim().length()-1);
     }
 
     public double[] getNodeDefinition() {
@@ -70,11 +72,13 @@ public class gNode {
         return outcomes;
     }
     public String getSavedOutcomes(){
+        if (outcomes == null) return "";
         String kq ="";
         for(String s: outcomes){
-            kq += s +  ' ';
+            kq += s +  ',';
         }
-        return kq.trim();
+        if (kq == "") return kq;
+        return   kq.trim().substring(0,kq.trim().length()-1) ;
     }
 
     public void setOutcomes(String[] outcomes) {
@@ -115,7 +119,12 @@ public class gNode {
         this.yPos = yPos;
         this.nodeType = nodeType;
         this.name = name;
-        this.id = createCptNode(net,id,name,outcomes,xPos,yPos);
+        if (nodeType == Network.NodeType.CPT) {
+            this.id = createCptNode(net,id,name,outcomes,xPos,yPos);
+        } else {
+            this.id = createNode(net,nodeType,id,name,outcomes,xPos,yPos);
+        }
+
         this.net.listNodes.add(this);
         this.parentNodes = new ArrayList<gNode>();
         this.nodeDefinition = new double[] {};
@@ -127,7 +136,7 @@ public class gNode {
         int handle = net.addNode(Network.NodeType.CPT, id);
 
         net.setNodeName(handle, name);
-        net.setNodePosition(handle, xPos, yPos, 85, 55);
+       // net.setNodePosition(handle, xPos, yPos, 85, 55);
 
         int initialOutcomeCount = net.getOutcomeCount(handle);
         for (int i = 0; i < initialOutcomeCount; i++) {
@@ -138,6 +147,24 @@ public class gNode {
             net.addOutcome(handle, outcomes[i]);
         }
 
+        return handle;
+    }
+    private static int createNode(
+            Network net, int nodeType, String id, String name,
+            String[] outcomes, int xPos, int yPos) {
+        int handle = net.addNode(nodeType, id);
+        net.setNodeName(handle, name);
+       // net.setNodePosition(handle, xPos, yPos, 85, 55);
+
+        if (outcomes != null) {
+            int initialOutcomeCount = net.getOutcomeCount(handle);
+            for (int i = 0; i < initialOutcomeCount; i ++) {
+                net.setOutcomeId(handle, i, outcomes[i]);
+            }
+            for (int i = initialOutcomeCount; i < outcomes.length; i ++) {
+                net.addOutcome(handle, outcomes[i]);
+            }
+        }
         return handle;
     }
 }

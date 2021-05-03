@@ -19,23 +19,29 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-
         gNetwork net = new gNetwork();
         net.setName("Tutorial01");
 
-
+        //net.deleteArc();
+        //net.deleteNode();
 //        int e = gNode.createCptNode(net,
 //                "Economy", "State of the economy",
 //                new String[] {"Up","Flat","Down"},
 //                160, 40);
+
         gNode e = new gNode(net,"Economy","State of the economy",new String[] {"Up","Flat","Down"}, Network.NodeType.CPT,160,40);
         gNode s = new gNode(net,"Success","Success of the venture",new String[] {"Success","Failure"}, Network.NodeType.CPT,60,40);
         gNode f = new gNode(net,"Forecast","Expert forecast",new String[] {"Good","Moderate","Poor"}, Network.NodeType.CPT,110,140);
+        gNode i = new gNode(net,"Invest", "Investment decision", new String[]{ "Invest", "DoNotInvest" }, Network.NodeType.DECISION,160, 240);
+        gNode g = new gNode(net,"Gain", "Financial gain", null, Network.NodeType.UTILITY,160, 240);
+
         net.addArc(e,s);
         net.addArc(s,f);
         net.addArc(e,f);
+        net.addArc(i,g);
+        net.addArc(s,g);
 
-        
+
 
         double[] economyDef = {
                 0.2, // P(Economy=U)
@@ -75,6 +81,7 @@ public class Controller implements Initializable {
                 0.70  // P(Forecast=G|Success=F,Economy=D)
         };
         f.setNodeDefinition(forecastDef);
+        net.writeFile("tutorial1.xdsl");
 
         net.saveToDb(demoGUI.con);
 

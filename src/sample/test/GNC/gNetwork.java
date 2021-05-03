@@ -15,9 +15,30 @@ public class gNetwork extends Network {
         this.listNodes = new ArrayList<gNode>();
     }
 
+
     public void addArc(gNode parentHandle, gNode childHandle) {
         super.addArc(parentHandle.getId(), childHandle.getId());
         childHandle.parentNodes.add(parentHandle);
+    }
+
+
+    public void deleteArc(gNode parentHandle, gNode childHandle) {
+        super.deleteArc(parentHandle.getId(), childHandle.getId());
+        childHandle.parentNodes.remove(parentHandle);
+    }
+
+    public void deleteNode(gNode nodeHandle) {
+        listNodes.remove(nodeHandle);
+        super.deleteNode(nodeHandle.getId());
+    }
+
+    public void changeEvidenceAndUpdate(gNode g, String outcomeId){
+        if( outcomeId == null){
+            this.clearAllEvidence();
+        } else {
+            this.setEvidence(g.getId(),outcomeId);
+        }
+        this.updateBeliefs();
     }
 
     public void saveToDb(Connection con) {
