@@ -81,6 +81,16 @@ public class Controller implements Initializable {
                 0.70  // P(Forecast=G|Success=F,Economy=D)
         };
         f.setNodeDefinition(forecastDef);
+
+        double[] gainDefinition = new double[] {
+                10000, // Utility(Invest=I, Success=S)
+                -5000, // Utility(Invest=I, Success=F)
+                500,   // Utility(Invest=D, Success=S)
+                500    // Utility(Invest=D, Success=F)
+        };
+
+        g.setNodeDefinition(gainDefinition);
+
         net.writeFile("tutorial1.xdsl");
 
         net.saveToDb(demoGUI.con);

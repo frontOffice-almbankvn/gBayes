@@ -41,6 +41,15 @@ public class gNetwork extends Network {
         this.updateBeliefs();
     }
 
+    public double[] getPosteriors(gNode g){
+        if (this.isEvidence(g.getId())) return  null;
+        return this.getNodeValue(g.getId());
+    }
+
+    public void updateNetwork(){
+        this.updateBeliefs();
+    }
+
     public void saveToDb(Connection con) {
         System.out.println(this.getName());
         try{
@@ -69,4 +78,13 @@ public class gNetwork extends Network {
 //            return false;
         }
     }
+
+    public static gNetwork loadFromDb(String netName,Connection con){
+        try {
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }
