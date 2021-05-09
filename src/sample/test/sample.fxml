@@ -30,7 +30,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Calulating">
             <items>
-              <MenuItem mnemonicParsing="false" text="Select" />
+              <MenuItem mnemonicParsing="false" text="Checking Status" />
                 <MenuItem mnemonicParsing="false" text="Caculate" />
             </items>
           </Menu>

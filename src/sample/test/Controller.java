@@ -4,15 +4,16 @@ import com.yworks.yfiles.geometry.RectD;
 import com.yworks.yfiles.graph.*;
 import com.yworks.yfiles.view.GraphControl;
 import com.yworks.yfiles.view.input.GraphEditorInputMode;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sample.test.GNC.*;
 import smile.Network;
@@ -132,18 +133,21 @@ public class Controller implements Initializable {
 
         setTreeView(treeView,net);
 
-
         graphEditorInputMode = new GraphEditorInputMode();
         graphEditorInputMode.setContextMenuItems(GraphItemTypes.NODE);
 
-
-
         treeView.getSelectionModel().selectedItemProperty().addListener( (observable, o,n) -> {
             System.out.println(n.getValue());
+            var t = n;
+
+            String id = t.getValue();
+            gNode g = net.getGNode(id);
+            //System.out.println(g.getNodeType());
+            if ((g != null ) && (g.getNodeType() ==18)){
+                System.out.println(g.getNodeType());
+                setEvidenceScreen(g);
+            }
         });
-
-
-
 
 
 
@@ -154,7 +158,7 @@ public class Controller implements Initializable {
         TreeItem<String> netWork = new TreeItem<String>( net.getName());
 
         for (gNode g : net.listNodes){
-            TreeItem<String> iNode = new TreeItem<String>(g.getName());
+            TreeItem<String> iNode = new TreeItem<String>( g.getIdName());
             iNode.setExpanded(true);
             netWork.getChildren().add(iNode);
         }
@@ -177,4 +181,26 @@ public class Controller implements Initializable {
         stage.setScene(scene);
         stage.showAndWait();
     }
+
+    public void setEvidenceScreen(gNode g){
+        Label label = new Label("Set evidence for: " + g.getName() );
+
+        VBox layoutV = new VBox(10);
+        layoutV.getChildren().add(label);
+        for (String s: g.getOutcomes()){
+            Button btn = new Button(s);
+            btn.setOnAction( e -> {
+                g.net.changeEvidenceAndUpdate(g,s);
+            });
+            layoutV.getChildren().add(btn);
+        }
+
+        Scene scene = new Scene(layoutV,300,200);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.showAndWait();
+    }
+
+
+
 }

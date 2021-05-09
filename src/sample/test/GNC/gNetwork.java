@@ -77,9 +77,16 @@ public class gNetwork extends Network {
     }
 
     public void deleteNode(gNode nodeHandle) {
-        //Xoa bo quan he
+        //Xoa bo quan he cha con, con cha
         for(gNode p : nodeHandle.getParentNodes()){
             deleteArc(p,nodeHandle);
+        }
+        for (gNode c: this.listNodes){
+            for (gNode p: c.getParentNodes()){
+                if( p.getIdName().equals(nodeHandle.getIdName())){
+                    deleteArc(nodeHandle,p);
+                }
+            }
         }
         //Xoa GUI
         this.iGraph.remove(nodeHandle.getiNode());
@@ -176,4 +183,6 @@ public class gNetwork extends Network {
             return null;
         }
     }
+
+
 }

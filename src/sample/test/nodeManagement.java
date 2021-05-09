@@ -101,7 +101,28 @@ public class nodeManagement implements Initializable {
             }
 
             //Set definition
-            g.setNodeDefinition(gNode.convertToNodeDef(txtDef.getText()));
+            //g.setNodeDefinition(gNode.convertToNodeDef(txtDef.getText()));
+
+            nodeList = FXCollections.observableArrayList( Controller.net.listNodes);
+            table.setItems(nodeList);
+        } catch(Exception ex){
+            ex.printStackTrace();
+            showAlert(ex.getMessage());
+        }
+    }
+    public void setDefinition(ActionEvent e){
+        try{
+            gNode r = null;
+            //gNode g = table.getSelectionModel().getSelectedItem();
+            for (gNode p: Controller.net.listNodes){
+                if(txtIdName.getText().equals(p.getIdName())){
+                    r = p;
+                    break;
+                }
+            }
+
+            //Set definition
+            r.setNodeDefinition(gNode.convertToNodeDef(txtDef.getText()));
 
             nodeList = FXCollections.observableArrayList( Controller.net.listNodes);
             table.setItems(nodeList);
@@ -113,9 +134,9 @@ public class nodeManagement implements Initializable {
 
     public void deleteNode(ActionEvent e){
         try {
-            gNode g = table.getSelectionModel().getSelectedItem();
+            //gNode g = table.getSelectionModel().getSelectedItem();
             for (gNode p: Controller.net.listNodes){
-                if (g.getIdName().equals(p.getIdName())) {
+                if (txtIdName.getText().equals(p.getIdName())) {
                     Controller.net.deleteNode(p);
                     break;
                 }
@@ -131,14 +152,32 @@ public class nodeManagement implements Initializable {
     }
 
     public void updateNode(ActionEvent e){
-        gNode g = table.getSelectionModel().getSelectedItem();
-            for (gNode p: Controller.net.listNodes){
-                if(g.getIdName().equals(p.getIdName())){
+        deleteNode(e);
+        addNode(e);
+        //setDefinition(e);
+//        try{
+//            gNode r = null;
+//            gNode g = table.getSelectionModel().getSelectedItem();
+//            for (gNode p: Controller.net.listNodes){
+//                if(g.getIdName().equals(p.getIdName())){
+//                    r = p;
+//                    break;
+//                }
+//            }
+//
+//            //Set definition
+//            //r.setNodeDefinition(gNode.convertToNodeDef(txtDef.getText()));
 
 
-                }
-            }
+//            nodeList = FXCollections.observableArrayList( Controller.net.listNodes);
+//            table.setItems(nodeList);
+//        } catch(Exception ex){
+//            ex.printStackTrace();
+//            showAlert(ex.getMessage());
+//        }
 
+        nodeList = FXCollections.observableArrayList( Controller.net.listNodes);
+        table.setItems(nodeList);
     }
 
     private Optional<ButtonType> showAlert(String content) {
