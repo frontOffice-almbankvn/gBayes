@@ -184,5 +184,76 @@ public class gNetwork extends Network {
         }
     }
 
+    public static void printPosteriors(Network net, int nodeHandle) {
+        String nodeId = net.getNodeId(nodeHandle);
+        if (net.isEvidence(nodeHandle)) {
+            System.out.printf("%s has evidence set (%s)\n",
+                    nodeId,
+                    net.getOutcomeId(nodeHandle, net.getEvidence(nodeHandle)));
+        } else {
+            double[] posteriors = net.getNodeValue(nodeHandle);
+            for (int i = 0; i < posteriors.length; i ++) {
+                System.out.printf("P(%s=%s)=%f\n",
+                        nodeId,
+                        net.getOutcomeId(nodeHandle, i),
+                        posteriors[i]);
+            }
+        }
+    }
+
+    public static void printAllPosteriors(gNetwork net) {
+        for (gNode g: net.listNodes){
+            if (g.getNodeType() == 18){
+                printPosteriors(net, g.id);
+            } else if( g.getNodeType() == 8){
+                printUtilityNode(net,g);
+            }
+        }
+
+        System.out.println();
+    }
+    public static void printUtilityNode(gNetwork net, gNode  node){
+        double[] expectedUtility = net.getNodeValue(node.getIdName());
+        int[] utilParents = net.getValueIndexingParents(node.getIdName());
+
+        printUtilityMatrix(net, expectedUtility ,utilParents);
+
+    }
+    public static void printUtilityMatrix(gNetwork net, double[] mtx, int[] parents){
+        int dimCount = 1 + parents.length;
+        int[] dimSizes = new int[dimCount];
+
+        for (int i = 0; i < dimCount - 1; i ++) {
+            dimSizes[i] = net.getOutcomeCount(parents[i]);
+        }
+        dimSizes[dimSizes.length - 1] = 1;
+        int[] coords = new int[dimCount];
+        for (int elemIdx = 0; elemIdx < mtx.length; elemIdx ++) {
+            indexToCoords(elemIdx, dimSizes, coords);
+            System.out.print("    Utility(");
+            if (dimCount > 1)
+            {
+                for (int parentIdx = 0; parentIdx < parents.length; parentIdx++)
+                {
+                    if (parentIdx > 0) System.out.print(",");
+                    int parentHandle = parents[parentIdx];
+                    System.out.printf("%s=%s",
+                            net.getNodeId(parentHandle),
+                            net.getOutcomeId(parentHandle, coords[parentIdx]));
+                }
+            }
+
+            System.out.printf(")=%f\n", mtx[elemIdx]);
+        }
+        System.out.println();
+    }
+
+    static void indexToCoords(int index, int[] dimSizes, int[] coords) {
+        int prod = 1;
+        for (int i = dimSizes.length - 1; i >= 0; i --) {
+            coords[i] = (index / prod) % dimSizes[i];
+            prod *= dimSizes[i];
+        }
+    }
 
 }

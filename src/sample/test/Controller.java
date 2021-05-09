@@ -191,6 +191,7 @@ public class Controller implements Initializable {
             Button btn = new Button(s);
             btn.setOnAction( e -> {
                 g.net.changeEvidenceAndUpdate(g,s);
+                gNetwork.printAllPosteriors(net);
             });
             layoutV.getChildren().add(btn);
         }
@@ -199,6 +200,10 @@ public class Controller implements Initializable {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.showAndWait();
+    }
+
+    public void resetEvidence(){
+        net.clearAllEvidence();
     }
 
 
