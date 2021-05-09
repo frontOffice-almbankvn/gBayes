@@ -1,12 +1,13 @@
 package sample.test;
 
-import com.yworks.yfiles.graph.FilteredGraphWrapper;
-import com.yworks.yfiles.graph.GraphItemTypes;
-import com.yworks.yfiles.graph.IGraph;
+import com.yworks.yfiles.geometry.RectD;
+import com.yworks.yfiles.graph.*;
 import com.yworks.yfiles.view.GraphControl;
 import com.yworks.yfiles.view.input.GraphEditorInputMode;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import sample.test.GNC.*;
@@ -14,6 +15,7 @@ import smile.Network;
 //import sample.test.GNC.gNetwork;
 //import sample.test.GNC.gNode;.GNC.*;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -22,13 +24,14 @@ public class Controller implements Initializable {
     TreeView<String> treeView;
     public gNetwork net;
     public GraphControl graphControl;
-    public IGraph iGraph;
+    public static IGraph iGraph;
     public GraphEditorInputMode graphEditorInputMode;
+
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        iGraph = graphControl.getGraph();
 //        gNetwork net = new gNetwork();
 //        net.setName("Tutorial01");
 //
@@ -101,6 +104,7 @@ public class Controller implements Initializable {
 //
 //        g.setNodeDefinition(gainDefinition);
         net  = gNetwork.loadFromDb("Tutorial01",demoGUI.con);
+        //net.setiGraph(iGraph);
         net.writeFile("tutorial1_loaded.xdsl");
 
 //        //net.saveToDb(demoGUI.con);
@@ -123,10 +127,11 @@ public class Controller implements Initializable {
 //        treeView.setShowRoot(false);
 
         setTreeView(treeView,net);
-        iGraph = graphControl.getGraph();
+
 
         graphEditorInputMode = new GraphEditorInputMode();
         graphEditorInputMode.setContextMenuItems(GraphItemTypes.NODE);
+
 
 
         treeView.getSelectionModel().selectedItemProperty().addListener( (observable, o,n) -> {
@@ -137,11 +142,13 @@ public class Controller implements Initializable {
 
 
 
+
     }
 
     public static void setTreeView(TreeView<String> tv, gNetwork net){
         TreeItem<String> root = new TreeItem<String>();
         TreeItem<String> netWork = new TreeItem<String>( net.getName());
+
         for (gNode g : net.listNodes){
             TreeItem<String> iNode = new TreeItem<String>(g.getName());
             iNode.setExpanded(true);
@@ -152,5 +159,10 @@ public class Controller implements Initializable {
 
         tv.setRoot(root);
         tv.setShowRoot(false);
+    }
+
+    public void saveTheNet(){
+        net.saveToDb(demoGUI.con);
+        System.out.printf("Saved the net");
     }
 }

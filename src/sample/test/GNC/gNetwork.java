@@ -1,5 +1,6 @@
 package sample.test.GNC;
 
+import com.yworks.yfiles.graph.IGraph;
 import smile.Network;
 
 import java.sql.Connection;
@@ -10,15 +11,29 @@ import java.util.List;
 
 public class gNetwork extends Network {
     public ArrayList<gNode> listNodes;
+    public IGraph iGraph;
+    public IGraph getiGraph() {
+        return iGraph;
+    }
+
+    public void setiGraph(IGraph iGraph) {
+        this.iGraph = iGraph;
+    }
+
+
 
     public gNetwork() {
         super();
         this.listNodes = new ArrayList<gNode>();
+        this.iGraph = sample.test.Controller.iGraph;
+        this.iGraph.clear();
     }
     public gNetwork(String n) {
         super();
         this.listNodes = new ArrayList<gNode>();
         this.setName(n);
+        this.iGraph = sample.test.Controller.iGraph;
+        this.iGraph.clear();
     }
 
     public ArrayList<gNode> gNetAllNodes(){
@@ -46,6 +61,9 @@ public class gNetwork extends Network {
     public void addArc(gNode parentHandle, gNode childHandle) {
         super.addArc(parentHandle.getId(), childHandle.getId());
         childHandle.parentNodes.add(parentHandle);
+
+        //Phan GUI;
+        this.iGraph.createEdge( parentHandle.getiNode(), childHandle.getiNode());
     }
 
 

@@ -1,5 +1,7 @@
 package sample.test.GNC;
 
+import com.yworks.yfiles.geometry.RectD;
+import com.yworks.yfiles.graph.INode;
 import smile.Network;
 
 import java.util.ArrayList;
@@ -13,6 +15,16 @@ public class gNode {
     private int yPos;
     private gNetwork net;
     public String tmpParent;
+
+    public INode getiNode() {
+        return iNode;
+    }
+
+    public void setiNode(INode iNode) {
+        this.iNode = iNode;
+    }
+
+    public INode iNode;
 
     public int getNodeType() {
         return nodeType;
@@ -132,6 +144,11 @@ public class gNode {
         this.net.listNodes.add(this);
         this.parentNodes = new ArrayList<gNode>();
         this.nodeDefinition = new double[] {};
+
+        //Phan GUI
+        this.iNode = this.net.getiGraph().createNode(new RectD(xPos, yPos,
+                70, 70));
+        this.net.getiGraph().addLabel(iNode,this.idName.trim());
     }
     public gNode(gNetwork net, String id, String name,
                  String[] outcomes, int nodeType ,int xPos, int yPos, String tmpParent){
@@ -153,6 +170,11 @@ public class gNode {
         this.parentNodes = new ArrayList<gNode>();
         this.nodeDefinition = new double[] {};
         this.tmpParent = tmpParent;
+
+        //Phan GUI
+        this.iNode = this.net.getiGraph().createNode(new RectD(xPos, yPos,
+                70, 70));
+        this.net.getiGraph().addLabel(iNode,this.idName.trim());
     }
 
     public static int createCptNode(
