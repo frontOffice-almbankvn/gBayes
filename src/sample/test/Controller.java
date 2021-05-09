@@ -1,5 +1,10 @@
 package sample.test;
 
+import com.yworks.yfiles.graph.FilteredGraphWrapper;
+import com.yworks.yfiles.graph.GraphItemTypes;
+import com.yworks.yfiles.graph.IGraph;
+import com.yworks.yfiles.view.GraphControl;
+import com.yworks.yfiles.view.input.GraphEditorInputMode;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
@@ -15,6 +20,11 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
     @FXML
     TreeView<String> treeView;
+    public gNetwork net;
+    public GraphControl graphControl;
+    public IGraph iGraph;
+    public GraphEditorInputMode graphEditorInputMode;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -90,31 +100,57 @@ public class Controller implements Initializable {
 //        };
 //
 //        g.setNodeDefinition(gainDefinition);
-        gNetwork net  = gNetwork.loadFromDb("Tutorial01",demoGUI.con);
+        net  = gNetwork.loadFromDb("Tutorial01",demoGUI.con);
         net.writeFile("tutorial1_loaded.xdsl");
 
-        //net.saveToDb(demoGUI.con);
+//        //net.saveToDb(demoGUI.con);
+//
+//        TreeItem<String> root = new TreeItem<String>();
+//        TreeItem<String> netWork = new TreeItem<String>( "network");
+//        TreeItem<String> iNode = new TreeItem<String>( net.getNodeName("Economy"));
+//
+//        //sample.getChildren()
+//
+//        netWork.getChildren().add(iNode);
+//        root.getChildren().add(netWork);
+//
+//
+//        root.setExpanded(true);
+//        netWork.setExpanded(true);
+//        iNode.setExpanded(true);
+//
+//        treeView.setRoot(root);
+//        treeView.setShowRoot(false);
 
-        TreeItem<String> root = new TreeItem<String>();
-        TreeItem<String> netWork = new TreeItem<String>( "network");
-        TreeItem<String> iNode = new TreeItem<String>( net.getNodeName("Economy"));
+        setTreeView(treeView,net);
+        iGraph = graphControl.getGraph();
 
-        //sample.getChildren()
+        graphEditorInputMode = new GraphEditorInputMode();
+        graphEditorInputMode.setContextMenuItems(GraphItemTypes.NODE);
 
-        netWork.getChildren().add(iNode);
-        root.getChildren().add(netWork);
-
-
-        root.setExpanded(true);
-        netWork.setExpanded(true);
-        iNode.setExpanded(true);
-
-        treeView.setRoot(root);
-        treeView.setShowRoot(true);
 
         treeView.getSelectionModel().selectedItemProperty().addListener( (observable, o,n) -> {
             System.out.println(n.getValue());
         });
 
+
+
+
+
+    }
+
+    public static void setTreeView(TreeView<String> tv, gNetwork net){
+        TreeItem<String> root = new TreeItem<String>();
+        TreeItem<String> netWork = new TreeItem<String>( net.getName());
+        for (gNode g : net.listNodes){
+            TreeItem<String> iNode = new TreeItem<String>(g.getName());
+            iNode.setExpanded(true);
+            netWork.getChildren().add(iNode);
+        }
+        root.getChildren().add(netWork);
+        netWork.setExpanded(true);
+
+        tv.setRoot(root);
+        tv.setShowRoot(false);
     }
 }

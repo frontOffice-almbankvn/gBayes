@@ -112,6 +112,7 @@ public class gNetwork extends Network {
             pstmt.setString(1,netName);
             var rs = pstmt.executeQuery();
             gNetwork net = new gNetwork(netName);
+
             while (rs.next()){
                 String sOutComes = rs.getString("outcomes").trim();
 
@@ -136,7 +137,6 @@ public class gNetwork extends Network {
                         }
                     }
                 }
-
                 g.setNodeDefinition(g.getNodeDefinition());
             }
 
@@ -146,5 +146,4 @@ public class gNetwork extends Network {
             return null;
         }
     }
-
 }
