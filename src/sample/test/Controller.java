@@ -5,11 +5,15 @@ import com.yworks.yfiles.graph.*;
 import com.yworks.yfiles.view.GraphControl;
 import com.yworks.yfiles.view.input.GraphEditorInputMode;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.stage.Stage;
 import sample.test.GNC.*;
 import smile.Network;
 //import sample.test.GNC.gNetwork;
@@ -22,7 +26,7 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
     @FXML
     TreeView<String> treeView;
-    public gNetwork net;
+    public static gNetwork net;
     public GraphControl graphControl;
     public static IGraph iGraph;
     public GraphEditorInputMode graphEditorInputMode;
@@ -164,5 +168,13 @@ public class Controller implements Initializable {
     public void saveTheNet(){
         net.saveToDb(demoGUI.con);
         System.out.printf("Saved the net");
+    }
+
+    public void showManagementNode() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("nodeManagement.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.showAndWait();
     }
 }

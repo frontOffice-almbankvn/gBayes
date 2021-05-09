@@ -7,14 +7,18 @@ import smile.Network;
 import java.util.ArrayList;
 
 public class gNode {
-    private int id;
-    private String name;
-    private String idName;
-    private String[] outcomes;
-    private int xPos;
-    private int yPos;
-    private gNetwork net;
+    public int id;
+    public String name;
+    public String idName;
+    public String[] outcomes;
+    public int xPos;
+    public int yPos;
+    public gNetwork net;
     public String tmpParent;
+    public int nodeType;
+    public ArrayList<gNode> parentNodes;
+    public double[] nodeDefinition;
+
 
     public INode getiNode() {
         return iNode;
@@ -34,9 +38,6 @@ public class gNode {
         this.nodeType = nodeType;
     }
 
-    private int nodeType;
-    public ArrayList<gNode> parentNodes;
-    public double[] nodeDefinition;
 
     public String getSavedParentNodes(){
         String kq = "";
@@ -149,6 +150,7 @@ public class gNode {
         this.iNode = this.net.getiGraph().createNode(new RectD(xPos, yPos,
                 70, 70));
         this.net.getiGraph().addLabel(iNode,this.idName.trim());
+
     }
     public gNode(gNetwork net, String id, String name,
                  String[] outcomes, int nodeType ,int xPos, int yPos, String tmpParent){

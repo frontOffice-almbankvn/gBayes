@@ -67,13 +67,25 @@ public class gNetwork extends Network {
     }
 
 
+
     public void deleteArc(gNode parentHandle, gNode childHandle) {
         super.deleteArc(parentHandle.getId(), childHandle.getId());
         childHandle.parentNodes.remove(parentHandle);
+
+        //Phan GUI;
+        this.iGraph.remove(this.iGraph.getEdge(parentHandle.getiNode(),childHandle.getiNode()));
     }
 
     public void deleteNode(gNode nodeHandle) {
-        listNodes.remove(nodeHandle);
+        //Xoa bo quan he
+        for(gNode p : nodeHandle.getParentNodes()){
+            deleteArc(p,nodeHandle);
+        }
+        //Xoa GUI
+        this.iGraph.remove(nodeHandle.getiNode());
+
+        listNodes.remove(nodeHandle); //Xoa trong danh sach
+
         super.deleteNode(nodeHandle.getId());
     }
 

@@ -23,8 +23,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Node">
             <items>
-              <MenuItem mnemonicParsing="false" text="Create Node" />
-                <MenuItem mnemonicParsing="false" text="Delete Node" />
+              <MenuItem mnemonicParsing="false" text="Node management" onAction="#showManagementNode" />
                 <MenuItem mnemonicParsing="false" text="Create Link" />
                 <MenuItem mnemonicParsing="false" text="Delete Link" />
             </items>
