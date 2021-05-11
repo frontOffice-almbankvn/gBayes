@@ -206,6 +206,12 @@ public class Controller implements Initializable {
         net.clearAllEvidence();
     }
 
-
+    public void showResult() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("result.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.showAndWait();
+    }
 
 }

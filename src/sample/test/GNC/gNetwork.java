@@ -201,17 +201,56 @@ public class gNetwork extends Network {
         }
     }
 
+    public static String getTextPosterior(Network net, int nodeHandle){
+        String nodeId = net.getNodeId(nodeHandle);
+        String kq = "";
+        if (net.isEvidence(nodeHandle)) {
+            kq = String.format("%s has evidence set (%s)\n",nodeId,
+                    net.getOutcomeId(nodeHandle, net.getEvidence(nodeHandle)) );
+
+        } else {
+            double[] posteriors = net.getNodeValue(nodeHandle);
+            for (int i = 0; i < posteriors.length; i ++) {
+                kq += String.format("P(%s=%s)=%f\n",
+                        nodeId,
+                        net.getOutcomeId(nodeHandle, i),
+                        posteriors[i]);
+            }
+        }
+
+        return kq;
+    }
+
     public static void printAllPosteriors(gNetwork net) {
         for (gNode g: net.listNodes){
             if (g.getNodeType() == 18){
-                printPosteriors(net, g.id);
+                //printPosteriors(net, g.id);
+                System.out.println(getTextPosterior(net, g.id));
             } else if( g.getNodeType() == 8){
-                printUtilityNode(net,g);
+                //printUtilityNode(net,g);
+                System.out.println(getTextUtilityNode(net,g));
+                //getTextUtilityNode(net,g);
             }
         }
 
         System.out.println();
     }
+    public static String getTextAllPosteriors(gNetwork net){
+        String kq = "";
+        for (gNode g: net.listNodes){
+            if (g.getNodeType() == 18){
+                kq+= getTextPosterior(net, g.id) + "\n";
+                //return getTextPosterior(net, g.id);
+            } else if( g.getNodeType() == 8){
+                //printUtilityNode(net,g);
+                kq += getTextUtilityNode(net,g) + "\n";
+                //System.out.println(getTextUtilityNode(net,g));
+                //getTextUtilityNode(net,g);
+            }
+        }
+        return kq;
+    }
+
     public static void printUtilityNode(gNetwork net, gNode  node){
         double[] expectedUtility = net.getNodeValue(node.getIdName());
         int[] utilParents = net.getValueIndexingParents(node.getIdName());
@@ -219,6 +258,13 @@ public class gNetwork extends Network {
         printUtilityMatrix(net, expectedUtility ,utilParents);
 
     }
+    public static String getTextUtilityNode(gNetwork net, gNode  node){
+        double[] expectedUtility = net.getNodeValue(node.getIdName());
+        int[] utilParents = net.getValueIndexingParents(node.getIdName());
+
+        return getTextUtilityMatrix(net, expectedUtility ,utilParents);
+    }
+
     public static void printUtilityMatrix(gNetwork net, double[] mtx, int[] parents){
         int dimCount = 1 + parents.length;
         int[] dimSizes = new int[dimCount];
@@ -246,6 +292,43 @@ public class gNetwork extends Network {
             System.out.printf(")=%f\n", mtx[elemIdx]);
         }
         System.out.println();
+    }
+
+    public static String getTextUtilityMatrix(gNetwork net, double[] mtx, int[] parents){
+        int dimCount = 1 + parents.length;
+        int[] dimSizes = new int[dimCount];
+        String kq = "";
+
+        for (int i = 0; i < dimCount - 1; i ++) {
+            dimSizes[i] = net.getOutcomeCount(parents[i]);
+        }
+        dimSizes[dimSizes.length - 1] = 1;
+        int[] coords = new int[dimCount];
+
+        for (int elemIdx = 0; elemIdx < mtx.length; elemIdx ++) {
+            indexToCoords(elemIdx, dimSizes, coords);
+            System.out.print("    Utility(");
+            kq += "    Utility(";
+            if (dimCount > 1)
+            {
+                for (int parentIdx = 0; parentIdx < parents.length; parentIdx++)
+                {
+                    if (parentIdx > 0) System.out.print(",");
+                    int parentHandle = parents[parentIdx];
+                    kq += String.format("%s=%s",
+                            net.getNodeId(parentHandle),
+                            net.getOutcomeId(parentHandle, coords[parentIdx]));
+//                    System.out.printf("%s=%s",
+//                            net.getNodeId(parentHandle),
+//                            net.getOutcomeId(parentHandle, coords[parentIdx]));
+                }
+            }
+
+            kq += String.format(")=%f\n", mtx[elemIdx]);
+//            System.out.printf(")=%f\n", mtx[elemIdx]);
+        }
+//        System.out.println();
+        return kq;
     }
 
     static void indexToCoords(int index, int[] dimSizes, int[] coords) {
