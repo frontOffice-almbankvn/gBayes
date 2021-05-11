@@ -8,13 +8,17 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import sample.test.GNC.*;
 import smile.Network;
 //import sample.test.GNC.gNetwork;
@@ -212,6 +216,54 @@ public class Controller implements Initializable {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.showAndWait();
+    }
+
+    public void saveNetWork(){
+        net.saveToDb(demoGUI.con);
+    }
+
+    public void creatNewNet(){
+        Dialog<String> dialog = new Dialog<>();
+
+        dialog.setTitle("Create new Network");
+        dialog.setHeaderText("Network");
+
+        ButtonType createNetType = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(createNetType,ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20,150,10,10));
+
+        TextField netName = new TextField();
+        netName.setPromptText("Name of the network");
+
+        grid.add(new Label("Netname"),0,0);
+        grid.add(netName,1,0);
+
+        Node createNet = dialog.getDialogPane().lookupButton(createNetType);
+        createNet.setDisable(true);
+
+        netName.textProperty().addListener((observable,o,n) ->{
+            createNet.setDisable(n.trim().isEmpty());
+        });
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter( d -> {
+            if(d == createNetType){
+                return netName.getText();
+            }
+            return null;
+        });
+
+        var kq = dialog.showAndWait();
+        kq.ifPresent( a -> {
+            System.out.println(a);
+            net = new gNetwork(a);
+            setTreeView(treeView,net);
+        });
     }
 
 }

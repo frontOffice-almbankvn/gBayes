@@ -17,7 +17,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="Network">
             <items>
-                <MenuItem mnemonicParsing="false" text="New" />
+                <MenuItem mnemonicParsing="false" text="New" onAction="#creatNewNet"/>
                 <MenuItem mnemonicParsing="false" text="Load" />
                 <MenuItem mnemonicParsing="false" text="Save"  onAction="#saveTheNet"/>
 

@@ -91,17 +91,21 @@ public class nodeManagement implements Initializable {
                     , Integer.parseInt(txtxPos.getText()), Integer.parseInt(txtyPos.getText()) );
 
             //Them parent
-            for (String ps: gNode.converToStrings(txtParent.getText())){
-                for (gNode p: Controller.net.listNodes){
-                    if(ps.equals(p.getIdName())){
-                        Controller.net.addArc(p,g);
-                        break;
+            if (gNode.converToStrings(txtParent.getText()) != null)
+            {
+                for (String ps: gNode.converToStrings(txtParent.getText())){
+                    for (gNode p: Controller.net.listNodes){
+                        if(ps.equals(p.getIdName())){
+                            Controller.net.addArc(p,g);
+                            break;
+                        }
                     }
                 }
             }
 
+
             //Set definition
-            //g.setNodeDefinition(gNode.convertToNodeDef(txtDef.getText()));
+            g.setNodeDefinition(gNode.convertToNodeDef(txtDef.getText()));
 
             nodeList = FXCollections.observableArrayList( Controller.net.listNodes);
             table.setItems(nodeList);
